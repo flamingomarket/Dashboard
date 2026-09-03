@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>فلامنجو هايبر ماركت</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- Supabase JS Library -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
   --navy: #2B4257;
@@ -380,7 +382,7 @@ button:active{transform: translateY(0);}
     </div>
 
     <div id="tab-search" class="tab-content no-print">
-      <div class="top"><h1>البحث والأرشيف</h1></div>
+      <div class="top"><h1>البحث والأرشيف السحابي</h1></div>
       <div class="card">
         <input id="historySearch" class="search" placeholder="ابحث برقم الأوردر، العميل، الكاشير..." oninput="renderHistory()">
         <table class="datatable">
@@ -411,7 +413,7 @@ button:active{transform: translateY(0);}
       <div class="stats">
         <div class="stat"><span>عدد الأوردرات</span><b id="sOrders">0</b></div>
         <div class="stat"><span>الكميات الكلية</span><b id="sQty">0</b></div>
-        <div class="stat"><span>الحالة</span><b style="color:var(--pink); font-size:20px;">نشط</b></div>
+        <div class="stat"><span>الحالة</span><b style="color:var(--pink); font-size:20px;">سحابي ☁️</b></div>
       </div>
     </div>
 
@@ -439,6 +441,11 @@ button:active{transform: translateY(0);}
 </div>
 
 <script>
+// --- Supabase Cloud Setup ---
+const SUPABASE_URL = "https://bmvhnhaeqllpofcpxjcj.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_B1GNr7YbqXRj5JF2acFUBw_IBzpbdNE";
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 function toEnglishNumbers(str) {
   const arabicNumbers = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
   let res = String(str ?? '');
@@ -452,13 +459,13 @@ let users = JSON.parse(localStorage.getItem("oms_users_v32")) || [
 ];
 let currentUser = null;
 
-let orders = JSON.parse(localStorage.getItem("oms_orders_v32") || "[]");
+let orders = []; // سيتم جلبها سحابياً مباشرة
 let suspendedOrders = JSON.parse(localStorage.getItem("oms_suspended_v32") || "[]");
 let currentItems = [];
 let freshItems = [];
 let editingSuspendedId = null;
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
     let savedUserJson = sessionStorage.getItem("oms_current_user_v32");
     if (savedUserJson) {
         currentUser = JSON.parse(savedUserJson);
@@ -470,13 +477,14 @@ window.addEventListener('DOMContentLoaded', () => {
         let managerElements = document.querySelectorAll(".manager-only");
         managerElements.forEach(el => el.style.display = (currentUser.role === 'manager') ? 'block' : 'none');
         
+        await fetchOrdersFromCloud();
         initNewOrderFields();
         renderFreshReceipt();
         switchTab('tab-new');
     }
 });
 
-function attemptLogin() {
+async function attemptLogin() {
   let code = toEnglishNumbers(document.getElementById("loginCode").value.trim());
   let pwd = toEnglishNumbers(document.getElementById("loginPassword").value.trim());
   let errorMsg = document.getElementById("loginError");
@@ -498,6 +506,7 @@ function attemptLogin() {
     document.getElementById("loginCode").value = '';
     document.getElementById("loginPassword").value = '';
     
+    await fetchOrdersFromCloud();
     initNewOrderFields();
     renderFreshReceipt();
     switchTab('tab-new');
@@ -511,6 +520,69 @@ function logout() {
   sessionStorage.removeItem("oms_current_user_v32");
   document.getElementById("main-app").style.display = 'none';
   document.getElementById("login-screen").style.display = 'flex';
+}
+
+// دالة جلب الأوردرات من سحاب Supabase مع تطبيق الصلاحيات
+async function fetchOrdersFromCloud() {
+    let query = _supabase.from('orders').select('*').order('id', { ascending: false });
+    
+    // صلاحية الكاشير: يرى أوردراته فقط بناءً على اسم الكاشير
+    if (currentUser && currentUser.role === 'cashier') {
+        query = query.eq('cashier_name', currentUser.name);
+    }
+
+    let { data, error } = await query;
+    if (error) {
+        console.error('خطأ في جلب الأوردرات السحابية:', error);
+        orders = [];
+    } else {
+        orders = (data || []).map(item => ({
+            id: item.id,
+            windowNum: item.window_num,
+            customer: item.customer,
+            phone: item.phone,
+            area: item.area,
+            address: item.addaddress,
+            notes: item.notes,
+            date: item.created_at ? new Date(item.created_at).toLocaleString('ar-EG') : '—',
+            isoDate: item.created_at,
+            items: typeof item.items === 'string' ? JSON.parse(item.items) : (item.items || []),
+            cashierName: item.cashier_name || 'غير معروف'
+        }));
+    }
+}
+
+async function saveOrderToCloud(orderData) {
+    const { error } = await _supabase
+        .from('orders')
+        .insert([
+            {
+                customer: orderData.customer,
+                phone: orderData.phone,
+                area: orderData.area,
+                addaddress: orderData.address,
+                notes: orderData.notes,
+                window_num: parseInt(orderData.windowNum) || 1,
+                items: orderData.items,
+                cashier_name: orderData.cashierName
+            }
+        ]);
+
+    if (error) {
+        console.error('خطأ في حفظ الأوردر سحابياً:', error);
+        alert('فشل حفظ الأوردر في السيرفر!');
+    } else {
+        await fetchOrdersFromCloud();
+    }
+}
+
+async function deleteOrderFromCloud(id) {
+    const { error } = await _supabase.from('orders').delete().eq('id', id);
+    if (error) {
+        console.error('خطأ في الحذف:', error);
+    } else {
+        await fetchOrdersFromCloud();
+    }
 }
 
 function saveNewPassword() {
@@ -564,7 +636,6 @@ function deleteUser(index) {
 }
 
 function saveData() {
-  localStorage.setItem("oms_orders_v32", JSON.stringify(orders));
   localStorage.setItem("oms_suspended_v32", JSON.stringify(suspendedOrders));
 }
 
@@ -596,7 +667,7 @@ function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 }
 
-function switchTab(tabId) {
+async function switchTab(tabId) {
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active'));
   let targetTab = document.getElementById(tabId);
@@ -604,6 +675,10 @@ function switchTab(tabId) {
   let activeBtn = document.getElementById('btn-' + tabId);
   if(activeBtn) activeBtn.classList.add('active');
   
+  if(tabId === 'tab-search' || tabId === 'tab-cancel' || tabId === 'tab-reports') {
+      await fetchOrdersFromCloud();
+  }
+
   if(tabId === 'tab-fresh') renderFreshReceipt();
   if(tabId === 'tab-suspended') renderSuspended();
   if(tabId === 'tab-search') renderHistory();
@@ -823,12 +898,11 @@ function collectData() {
     date: document.getElementById("orderDate").value,
     isoDate: new Date().toISOString(),
     items: JSON.parse(JSON.stringify(currentItems)),
-    cashierCode: currentUser.code,
     cashierName: currentUser.name
   };
 }
 
-function performSave() {
+async function performSave() {
   if(!document.getElementById("customer").value.trim() && !document.getElementById("phone").value.trim() && currentItems.length === 0) { 
       alert("أدخل بيانات العميل أو الأصناف أولاً!"); 
       return false; 
@@ -840,17 +914,18 @@ function performSave() {
     suspendedOrders = suspendedOrders.filter(x => x.id !== editingSuspendedId);
     editingSuspendedId = null;
   }
-  orders.unshift(o);
-  saveData(); 
+  
+  // حفظ مباشر في سحاب Supabase
+  await saveOrderToCloud(o);
   return true;
 }
 
-function saveOrderAction() {
-  if(performSave()) { clearOrder(); }
+async function saveOrderAction() {
+  if(await performSave()) { clearOrder(); }
 }
 
-function saveAndPrintAction() {
-  if(performSave()) {
+async function saveAndPrintAction() {
+  if(await performSave()) {
       renderReceipt();
       setTimeout(() => {
           window.print();
@@ -866,37 +941,29 @@ function suspendOrder() {
   if(editingSuspendedId) suspendedOrders = suspendedOrders.filter(x => x.id !== editingSuspendedId);
   suspendedOrders.unshift(o);
   saveData(); 
-  alert("تم تعليق الأوردر!");
+  alert("تم تعليق الأوردر محلياً!");
   clearOrder(); 
 }
 
-function getFilteredList(rawList) {
-  if(currentUser.role === 'manager') return rawList;
-  return rawList.filter(x => x.cashierCode === currentUser.code);
-}
-
 function renderSuspended() {
-  let list = getFilteredList(suspendedOrders);
   let b = document.getElementById("suspendedBody");
-  if(list.length === 0) { b.innerHTML = `<tr><td colspan="5">لا توجد أوردرات معلقة.</td></tr>`; return; }
-  b.innerHTML = list.map((o) => {
-    let rawIndex = suspendedOrders.findIndex(x => x.id === o.id && x.cashierCode === o.cashierCode);
-    return `<tr>
+  if(suspendedOrders.length === 0) { b.innerHTML = `<tr><td colspan="5">لا توجد أوردرات معلقة.</td></tr>`; return; }
+  b.innerHTML = suspendedOrders.map((o, index) => `
+    <tr>
       <td>${esc(o.date)}</td>
       <td><b>${esc(o.customer)}</b></td>
       <td><b>${esc(o.windowNum)}</b></td>
       <td>${o.items.length}</td>
       <td>
-        <button class="primary" onclick="resumeSuspended(${rawIndex})">استكمال</button>
-        <button class="danger" onclick="deleteSuspended(${rawIndex})">حذف</button>
+        <button class="primary" onclick="resumeSuspended(${index})">استكمال</button>
+        <button class="danger" onclick="deleteSuspended(${index})">حذف</button>
       </td>
-    </tr>`;
-  }).join("");
+    </tr>
+  `).join("");
 }
 
 function resumeSuspended(index) {
-  let list = getFilteredList(suspendedOrders);
-  let o = list[index];
+  let o = suspendedOrders[index];
   editingSuspendedId = o.id;
   document.getElementById("orderId").value = o.id;
   document.getElementById("windowNum").value = o.windowNum || 1;
@@ -910,21 +977,21 @@ function resumeSuspended(index) {
 
 function deleteSuspended(index) {
   if(confirm("حذف الأوردر المعلق؟")) {
-    let list = getFilteredList(suspendedOrders);
-    let o = list[index];
-    let realIndex = suspendedOrders.findIndex(x => x.id === o.id && x.cashierCode === o.cashierCode);
-    if(realIndex > -1) { suspendedOrders.splice(realIndex, 1); saveData(); renderSuspended(); }
+    suspendedOrders.splice(index, 1);
+    saveData();
+    renderSuspended();
   }
 }
 
-function renderHistory() {
+async function renderHistory() {
   let q = (document.getElementById("historySearch").value || "").trim().toLowerCase();
-  let list = getFilteredList(orders).filter(o => {
+  await fetchOrdersFromCloud();
+  let list = orders.filter(o => {
       let str = [String(o.id), String(o.windowNum), String(o.customer), String(o.phone), String(o.cashierName)].join(" ").toLowerCase();
       return !q || str.includes(q);
   });
   let b = document.getElementById("historyBody");
-  if(list.length === 0) { b.innerHTML = `<tr><td colspan="8">لا توجد نتائج.</td></tr>`; return; }
+  if(list.length === 0) { b.innerHTML = `<tr><td colspan="8">لا توجد نتائج سحابية.</td></tr>`; return; }
   b.innerHTML = list.slice(0, 50).map(o => {
     return `<tr>
       <td><b>${esc(o.id)}</b></td>
@@ -934,13 +1001,13 @@ function renderHistory() {
       <td>${esc(o.phone)}</td>
       <td>${o.items.reduce((a, x) => a + x.qty, 0)}</td>
       <td><b>${esc(o.cashierName)}</b></td>
-      <td><button class="primary" onclick="loadOrderToPrint('${o.id}', '${o.cashierCode}')">طباعة</button></td>
+      <td><button class="primary" onclick="loadOrderToPrint('${o.id}')">طباعة</button></td>
     </tr>`;
   }).join("");
 }
 
-function loadOrderToPrint(id, cashierCode) {
-  let o = orders.find(x => x.id == id && x.cashierCode == cashierCode);
+function loadOrderToPrint(id) {
+  let o = orders.find(x => x.id == id);
   if(!o) return;
   document.getElementById("orderId").value = o.id;
   document.getElementById("windowNum").value = o.windowNum || 1;
@@ -952,14 +1019,15 @@ function loadOrderToPrint(id, cashierCode) {
   switchTab('tab-new'); renderItems(); renderReceipt();
 }
 
-function renderCancelList() {
+async function renderCancelList() {
   let q = (document.getElementById("cancelSearch").value || "").trim().toLowerCase();
-  let list = getFilteredList(orders).filter(o => {
+  await fetchOrdersFromCloud();
+  let list = orders.filter(o => {
       let str = [String(o.id), String(o.customer), String(o.cashierName)].join(" ").toLowerCase();
       return !q || str.includes(q);
   });
   let b = document.getElementById("cancelBody");
-  if(list.length === 0) { b.innerHTML = `<tr><td colspan="6">لا توجد أوردرات.</td></tr>`; return; }
+  if(list.length === 0) { b.innerHTML = `<tr><td colspan="6">لا توجد أوردرات سحابية.</td></tr>`; return; }
   b.innerHTML = list.slice(0, 50).map(o => `
     <tr>
       <td><b>${esc(o.id)}</b></td>
@@ -967,50 +1035,38 @@ function renderCancelList() {
       <td>${esc(o.windowNum)}</td>
       <td>${esc(o.customer)}</td>
       <td>${esc(o.phone)}</td>
-      <td><button class="danger" onclick="deleteOrderForever('${o.id}', '${o.cashierCode}')">حذف ❌</button></td>
+      <td><button class="danger" onclick="deleteOrderForever('${o.id}')">حذف ❌</button></td>
     </tr>
   `).join("");
 }
 
-function deleteOrderForever(id, cashierCode) {
-  if(confirm("حذف نهائي؟")) {
-    orders = orders.filter(x => !(x.id == id && x.cashierCode == cashierCode)); 
-    saveData(); renderCancelList();
+async function deleteOrderForever(id) {
+  if(confirm("حذف نهائي من السيرفر السحابي؟")) {
+    await deleteOrderFromCloud(id);
+    renderCancelList();
   }
-}
-
-let filteredOrdersForReport = [];
-function getOrderISODate(o) {
-  if (o.isoDate) return o.isoDate.split("T")[0];
-  try {
-    let p = o.date.split(" ")[0].split("/");
-    if (p.length === 3) return `${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;
-  } catch(e) {}
-  return "";
 }
 
 function filterReports() {
   let dFrom = document.getElementById("dateFrom").value;
   let dTo = document.getElementById("dateTo").value;
-  let baseList = getFilteredList(orders);
-  filteredOrdersForReport = baseList.filter(o => {
-    let oDate = getOrderISODate(o);
+  let filteredOrdersForReport = orders.filter(o => {
+    let oDate = o.isoDate ? o.isoDate.split("T")[0] : "";
     if (!oDate) return true;
     if (dFrom && oDate < dFrom) return false;
     if (dTo && oDate > dTo) return false;
     return true;
   });
-  updateStatsUI();
-}
-
-function updateStatsUI() {
+  
   let tQ = 0;
-  filteredOrdersForReport.forEach(o => o.items.forEach(i => { tQ += i.qty; }));
+  filteredOrdersForReport.forEach(o => o.items.forEach(i => { tQ += (i.qty || 0); }));
   document.getElementById("sOrders").textContent = filteredOrdersForReport.length;
   document.getElementById("sQty").textContent = tQ;
+  window.currentReportList = filteredOrdersForReport;
 }
 
-function updateStats() {
+async function updateStats() {
+  await fetchOrdersFromCloud();
   if (!document.getElementById("dateFrom").value) {
      let today = new Date().toISOString().split("T")[0];
      document.getElementById("dateFrom").value = today; document.getElementById("dateTo").value = today;
@@ -1019,15 +1075,16 @@ function updateStats() {
 }
 
 function exportToExcel() {
-  if(filteredOrdersForReport.length === 0) { alert("لا توجد بيانات للتصدير."); return; }
+  let repList = window.currentReportList || orders;
+  if(repList.length === 0) { alert("لا توجد بيانات للتصدير."); return; }
   let csvContent = "\uFEFFرقم الأوردر,التاريخ,الشباك,العميل,الموبايل,المنطقة,العنوان,الكمية الكلية,الكاشير\n";
-  filteredOrdersForReport.forEach(o => {
+  repList.forEach(o => {
     let tQ = o.items.reduce((a, x) => a + x.qty, 0);
     csvContent += `"${o.id}","${o.date}","${o.windowNum}","${o.customer}","${o.phone}","${o.area}","${o.address}",${tQ},"${o.cashierName}"\n`;
   });
   let link = document.createElement("a");
   link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
-  link.download = "Flamingo_Orders_Reports_" + new Date().toISOString().split('T')[0] + ".csv";
+  link.download = "Flamingo_Cloud_Reports_" + new Date().toISOString().split('T')[0] + ".csv";
   link.click();
 }
 
