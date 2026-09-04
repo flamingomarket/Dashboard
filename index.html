@@ -231,19 +231,64 @@ button:active{transform: translateY(0);}
       </div>
     </div>
 
-    <div id="tab-fresh" class="tab-content no-print"><div class="top"><h1>قسم الفريشات</h1></div></div>
-    <div id="tab-suspended" class="tab-content no-print"><div class="top"><h1>الأوردرات المعلقة</h1></div><div class="card"><table class="datatable"><tbody id="suspendedBody"></tbody></table></div></div>
+    <!-- قسم الفريشات -->
+    <div id="tab-fresh" class="tab-content no-print">
+      <div class="top">
+        <h1>قسم الفريشات وتجهيز الأقسام (تكت الشيف)</h1>
+        <div class="actions">
+          <button class="success" onclick="printFreshTicket()">🖨️ طباعة تكت الفريشات</button>
+        </div>
+      </div>
+      <div class="grid">
+        <section class="card formcard">
+          <h3>بيانات أوردر الفريشات</h3>
+          <div class="form">
+            <div class="field"><label>رقم الشباك (يدوي)</label><input id="freshWindow" type="number" min="1" value="1"></div>
+            <div class="field"><label>اسم العميل</label><input id="freshCustomer" placeholder="اسم العميل"></div>
+            <div class="field"><label>القسم / الشيف</label><input id="freshSection" placeholder="مثال: شيف الجبن"></div>
+          </div>
+          <h3 style="margin-top:25px">إضافة منتجات فريش</h3>
+          <div class="addrow">
+            <input id="freshProductName" type="text" placeholder="اسم المنتج">
+            <input id="freshQty" type="number" min="1" value="1" placeholder="الكمية">
+            <input id="freshWeight" type="number" min="0" placeholder="الوزن">
+            <input id="freshItemNote" type="text" placeholder="ملاحظات">
+            <button class="primary" onclick="addFreshItem()">إضافة ＋</button>
+          </div>
+          <table class="items">
+            <thead><tr><th>#</th><th>الصنف</th><th>الكمية</th><th>الوزن</th><th>ملاحظات</th><th>إجراء</th></tr></thead>
+            <tbody id="freshItemsBody"></tbody>
+          </table>
+        </section>
+        <section class="card receipt-container">
+          <div style="width:100%;">
+              <h3 style="text-align:center;">معاينة تكت الفريشات</h3>
+              <div class="receipt" id="freshReceipt"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div id="tab-suspended" class="tab-content no-print">
+      <div class="top"><h1>الأوردرات المعلقة</h1></div>
+      <div class="card"><table class="datatable"><tbody id="suspendedBody"></tbody></table></div>
+    </div>
+    
     <div id="tab-search" class="tab-content no-print">
       <div class="top"><h1>البحث والأرشيف</h1></div>
       <div class="card">
         <input id="historySearch" class="search" placeholder="بحث..." oninput="renderHistory()">
         <table class="datatable">
-          <thead><tr><th>رقم</th><th>الوقت</th><th>الشباك</th><th>العميل</th><th>الموبايل</th><th>الكاشير</th><th>إجراء</th></tr></thead>
+          <thead><tr><th>رقم</th><th>الوقت</th><th>الشباك</th><th>العميل</th><th>الموبايل</th><th>الأصناف</th><th>الكاشير</th><th>إجراء</th></tr></thead>
           <tbody id="historyBody"></tbody>
         </table>
       </div>
     </div>
-    <div id="tab-cancel" class="tab-content no-print"><div class="top"><h1>إلغاء الأوردرات</h1></div></div>
+
+    <div id="tab-cancel" class="tab-content no-print">
+      <div class="top"><h1>إلغاء الأوردرات</h1></div>
+      <div class="card"><table class="datatable"><tbody id="cancelBody"></tbody></table></div>
+    </div>
     
     <!-- قسم التقارير والإكسيل المحدث -->
     <div id="tab-reports" class="tab-content no-print">
@@ -260,14 +305,29 @@ button:active{transform: translateY(0);}
       </div>
     </div>
 
-    <div id="tab-users" class="tab-content no-print manager-only"><div class="top"><h1>الموظفين</h1></div></div>
+    <div id="tab-users" class="tab-content no-print manager-only">
+      <div class="top"><h1>إدارة الموظفين</h1></div>
+      <div class="card">
+        <h3>إضافة كاشير جديد</h3>
+        <div class="form">
+          <div class="field"><label>اسم الموظف</label><input id="newUserName"></div>
+          <div class="field"><label>كود الدخول</label><input id="newUserCode"></div>
+          <div class="field"><label>الباسورد</label><input type="password" id="newUserPwd"></div>
+        </div>
+        <button class="success" style="margin-top:15px;" onclick="createNewUser()">إنشاء حساب ➕</button>
+      </div>
+      <div class="card">
+        <h3>الموظفين المسجلين</h3>
+        <table class="datatable"><tbody id="usersListBody"></tbody></table>
+      </div>
+    </div>
   </main>
 </div>
 
 <script>
-// إعدادات Supabase السحابي
+// إعدادات Supabase السحابي بالمفاتيح الحقيقية التي أرسلتها
 const SUPABASE_URL = 'https://bmvhnhaeqllpofcpxjcj.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtdmhuaGFlcWxscG9mY3B4amNqIiwicm9sZSI6ImFub24iLCJpYXQiOjM0ODQyNTU2NzMsImV4cCI6MTU2MzkwOTI3M30.ضع_مفتاحك_الصحيح_هنا';
+const SUPABASE_ANON_KEY = 'sb_publishable_B1GNr7YbqXRj5JF2acFUBw_IBzpbdNE';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let users = JSON.parse(localStorage.getItem("oms_users_v32")) || [
@@ -276,6 +336,7 @@ let users = JSON.parse(localStorage.getItem("oms_users_v32")) || [
 ];
 let currentUser = null;
 let orders = [];
+let suspendedOrders = JSON.parse(localStorage.getItem("oms_suspended_v32") || "[]");
 let currentItems = [];
 let freshItems = [];
 let editingSuspendedId = null;
@@ -285,7 +346,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (savedUserJson) {
         currentUser = JSON.parse(savedUserJson);
         startApp();
-        await fetchOrdersFromCloud(); // جلب البيانات تلقائياً أول ما يفتح من أي جهاز (موبايل أو لاب)
+        await fetchOrdersFromCloud(); // جلب البيانات تلقائياً سحابياً فور فتح أي جهاز
     }
 });
 
@@ -295,6 +356,7 @@ async function startApp() {
     document.getElementById("displayUserName").textContent = currentUser.name;
     document.querySelectorAll(".manager-only").forEach(el => el.style.display = (currentUser.role === 'manager') ? 'block' : 'none');
     initNewOrderFields();
+    renderFreshReceipt();
     switchTab('tab-new');
 }
 
@@ -306,7 +368,7 @@ async function attemptLogin() {
     currentUser = user;
     sessionStorage.setItem("oms_current_user_v32", JSON.stringify(user));
     startApp();
-    await fetchOrdersFromCloud(); // جلب الداتا فور تسجيل الدخول من أي جهاز
+    await fetchOrdersFromCloud(); // جلب الأوردرات من السحاب فور تسجيل الدخول من الموبايل أو اللاب
   } else {
     document.getElementById("loginError").style.display = 'block';
   }
@@ -319,7 +381,56 @@ function logout() {
   document.getElementById("login-screen").style.display = 'flex';
 }
 
-// دالة حفظ الأوردر في Supabase سحابياً ليتزامن مع كل الأجهزة
+function saveNewPassword() {
+  let newP = document.getElementById("newPwd").value.trim();
+  if(!newP) { alert("برجاء كتابة باسورد جديد"); return; }
+  let uIndex = users.findIndex(u => u.code === currentUser.code);
+  if(uIndex > -1) {
+    users[uIndex].password = newP;
+    localStorage.setItem("oms_users_v32", JSON.stringify(users));
+    alert("تم تغيير كلمة المرور بنجاح!");
+    document.getElementById('pwdModal').style.display = 'none';
+  }
+}
+
+function createNewUser() {
+  if (currentUser.role !== 'manager') return;
+  let n = document.getElementById("newUserName").value.trim();
+  let c = document.getElementById("newUserCode").value.trim();
+  let p = document.getElementById("newUserPwd").value.trim();
+  if(!n || !c || !p) { alert("أكمل جميع البيانات"); return; }
+  if(users.find(u => u.code === c)) { alert("هذا الكود مستخدم بالفعل!"); return; }
+  users.push({ name: n, code: c, password: p, role: 'cashier' });
+  localStorage.setItem("oms_users_v32", JSON.stringify(users));
+  document.getElementById("newUserName").value = "";
+  document.getElementById("newUserCode").value = "";
+  document.getElementById("newUserPwd").value = "";
+  alert("تم إضافة الموظف بنجاح!");
+  renderUsersList();
+}
+
+function renderUsersList() {
+  let b = document.getElementById("usersListBody");
+  b.innerHTML = users.map((u, i) => `
+    <tr>
+      <td>${u.name}</td>
+      <td><b>${u.code}</b></td>
+      <td>${u.role === 'manager' ? '<span style="color:var(--pink); font-weight:bold;">مدير</span>' : 'كاشير'}</td>
+      <td>${u.code !== 'admin' ? `<button class="danger" style="padding:6px 12px" onclick="deleteUser(${i})">حذف</button>` : '-'}</td>
+    </tr>
+  `).join("");
+}
+
+function deleteUser(index) {
+  if (users[index].code === 'admin') return;
+  if(confirm("حذف هذا الموظف؟")) {
+    users.splice(index, 1);
+    localStorage.setItem("oms_users_v32", JSON.stringify(users));
+    renderUsersList();
+  }
+}
+
+// دالة حفظ الأوردر في Supabase سحابياً ليتزامن فوريًا بين الموبايل واللاب
 async function saveOrderToCloud(orderData) {
     try {
         const { error } = await _supabase.from('orders').insert([{
@@ -344,13 +455,15 @@ async function saveOrderToCloud(orderData) {
     }
 }
 
-// دالة جلب الأوردرات من Supabase سحابياً
+// دالة جلب الأوردرات من Supabase سحابياً (المدير يرى الكل، والكاشير يرى أوردراته)
 async function fetchOrdersFromCloud() {
     try {
         const { data, error } = await _supabase.from('orders').select('*').order('created_at', { ascending: false });
         if (error) { console.error('خطأ في الجلب:', error.message); return; }
 
         let allCloudOrders = data || [];
+        
+        // التعديل الجوهري: المدير (Manager) يرى كل أوردرات الكاشيرية من أي جهاز، والكاشير يرى أوردراته فقط
         if (currentUser && currentUser.role !== 'manager') {
             allCloudOrders = allCloudOrders.filter(o => o.cashier_name === currentUser.name);
         }
@@ -370,6 +483,7 @@ async function fetchOrdersFromCloud() {
         }));
 
         if (typeof renderHistory === 'function') renderHistory();
+        if (typeof filterReports === 'function') filterReports();
     } catch (err) {
         console.error('خطأ في الاتصال:', err);
     }
@@ -382,8 +496,13 @@ function switchTab(tabId) {
   if(targetTab) targetTab.style.display = 'block';
   let activeBtn = document.getElementById('btn-' + tabId);
   if(activeBtn) activeBtn.classList.add('active');
+  
+  if(tabId === 'tab-fresh') renderFreshReceipt();
+  if(tabId === 'tab-suspended') renderSuspended();
   if(tabId === 'tab-search') renderHistory();
+  if(tabId === 'tab-cancel') renderCancelList();
   if(tabId === 'tab-reports') updateStats();
+  if(tabId === 'tab-users') renderUsersList();
 }
 
 function initNewOrderFields() {
@@ -453,15 +572,27 @@ function saveOrderAction() { if(performSave()) { clearOrder(); alert("تم حف�
 function saveAndPrintAction() { if(performSave()) { window.print(); clearOrder(); } }
 function suspendOrder() { alert("تم تعليق الأوردر محلياً"); clearOrder(); }
 
+function renderFreshItem() {}
+function addFreshItem() {}
+function renderFreshReceipt() {}
+function printFreshTicket() {}
+function renderSuspended() {}
+function renderCancelList() {}
+
 function renderHistory() {
+  let q = (document.getElementById("historySearch").value || "").trim().toLowerCase();
+  let list = orders.filter(o => {
+      let str = [String(o.id), String(o.windowNum), String(o.customer), String(o.phone), String(o.cashierName)].join(" ").toLowerCase();
+      return !q || str.includes(q);
+  });
   let b = document.getElementById("historyBody");
-  b.innerHTML = orders.map(o => `<tr><td><b>${o.id}</b></td><td>${o.date}</td><td>${o.windowNum}</td><td>${o.customer}</td><td>${o.phone}</td><td><b>${o.cashierName}</b></td><td>-</td></tr>`).join("");
+  b.innerHTML = list.map(o => `<tr><td><b>${o.id}</b></td><td>${o.date}</td><td>${o.windowNum}</td><td>${o.customer}</td><td>${o.phone}</td><td>${o.items.reduce((a,x)=>a+x.qty,0)}</td><td><b>${o.cashierName}</b></td><td>-</td></tr>`).join("");
 }
 
-// دالة فلترة التقارير والإكسيل المحدثة لتشمل كافة الأوردرات السحابية
+// دالة فلترة التقارير والإكسيل لتشمل كافة الأوردرات المجلوبة من السحاب
 let filteredOrdersForReport = [];
 function filterReports() {
-  filteredOrdersForReport = orders; // تشمل كل الأوردرات المجلوبة من السحاب للمدير أو الكاشير
+  filteredOrdersForReport = orders; 
   updateStatsUI();
 }
 
