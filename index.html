@@ -13,10 +13,10 @@
   --dark-text: #2c3e50;
   --border: #e0e6ed;
 }
-
+ 
 *{box-sizing:border-box}
 body{margin:0;font-family:'Cairo', Tahoma, Arial, sans-serif;background:var(--light-bg);color:var(--dark-text); min-height: 100vh; display: flex; flex-direction: column;}
-
+ 
 /* --- Login Screen Styles --- */
 #login-screen {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -33,7 +33,7 @@ body{margin:0;font-family:'Cairo', Tahoma, Arial, sans-serif;background:var(--li
 .login-box input:focus { border-color: var(--pink); outline: none; box-shadow: 0 0 0 3px rgba(243,129,152,0.1); }
 .login-box button { width: 100%; padding: 14px; font-size: 16px; margin-top: 15px; border-radius: 8px; }
 .login-error { color: #e74c3c; font-size: 14px; margin-bottom: 15px; display: none; font-weight: bold; background: #fadbd8; padding: 10px; border-radius: 6px;}
-
+ 
 /* --- Main App Layout --- */
 .app{display:none; min-height:100vh; flex: 1;}
 .side{width:240px;background:var(--navy);color:#fff;padding:20px 15px;position:fixed;right:0;top:0;bottom:0;z-index:100;overflow-y:auto; box-shadow: -2px 0 10px rgba(0,0,0,0.1); display: flex; flex-direction: column; justify-content: space-between;}
@@ -42,12 +42,12 @@ body{margin:0;font-family:'Cairo', Tahoma, Arial, sans-serif;background:var(--li
 .nav button{width:100%;border:0;background:transparent;color:#ecf0f1;text-align:right;padding:12px 15px;border-radius:8px;margin:4px 0;font-size:15px;cursor:pointer;transition:0.2s;white-space:nowrap; font-family: inherit; font-weight: 600;}
 .nav button:hover, .nav button.active{background:rgba(255,255,255,0.1);color: var(--pink);}
 .manager-only { display: none; }
-
+ 
 .main{margin-right:240px;width:calc(100% - 240px);padding:25px;transition:all 0.3s; padding-bottom: 40px;}
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
 .top h1{margin:0;font-size:24px; color: var(--navy); font-weight: 700;}
 .actions{display:flex;gap:10px;flex-wrap:wrap}
-
+ 
 button{cursor:pointer;border:0;border-radius:8px;padding:10px 16px;font-weight:bold;font-size:14px;transition:0.2s; font-family: inherit;}
 button:hover{opacity:0.9; transform: translateY(-1px);}
 button:active{transform: translateY(0);}
@@ -57,39 +57,39 @@ button:active{transform: translateY(0);}
 .warning{background:#f39c12;color:#fff;box-shadow: 0 4px 6px rgba(243,156,18,0.2);}
 .muted{background:#e8edf2;color:var(--dark-text);}
 .export-btn{background:#16a085;color:#fff;font-size:15px;padding:12px 20px;display:inline-flex;align-items:center;gap:8px;}
-
+ 
 .grid{display:grid;grid-template-columns:1.5fr 1fr;gap:20px}
 .card{background:#fff;border:none;border-radius:12px;padding:20px;box-shadow:0 4px 15px rgba(0,0,0,0.04);margin-bottom:20px;overflow-x:auto}
 .card h3{margin:0 0 15px;font-size:18px;color:var(--navy);border-bottom:2px solid var(--light-bg);padding-bottom:10px; font-weight: 700;}
-
+ 
 .form{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .field label{display:block;font-size:13px;color:#7f8c8d;margin-bottom:6px;font-weight:600}
 .field input, .field select, .field textarea{width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px; transition: 0.3s;}
 .field input:focus, .field textarea:focus{outline:none;border-color:var(--pink); background: #fffafb;}
 .field textarea{min-height:70px;resize:vertical}
 .full{grid-column:1/-1}
-
+ 
 .items{width:100%;border-collapse:separate;border-spacing:0;margin-top:15px;}
 .items th, .items td{border-bottom:1px solid var(--border);padding:12px 10px;text-align:center;font-size:14px}
 .items th{background:#f8f9fa;color:var(--navy);font-weight: 700; border-top: 1px solid var(--border); border-bottom: 2px solid var(--border);}
 .items th:first-child{border-top-right-radius: 8px;}
 .items th:last-child{border-top-left-radius: 8px;}
 .qty{font-size:16px;font-weight:bold;color:var(--navy)}
-
+ 
 .addrow{display:grid;grid-template-columns:1.5fr 70px 90px 1.5fr 85px;gap:8px;margin-top:15px; align-items: end;}
 .addrow input{min-width:0;padding:10px;border:2px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px}
 .addrow button{padding: 10px;}
-
+ 
 .search{width:100%;padding:12px;border:2px solid var(--border);border-radius:8px;font-size:15px;margin-bottom:20px; font-family: inherit;}
 .search:focus { outline:none; border-color: var(--pink); }
-
+ 
 /* --- Side Watermark (Inside Sidebar Flow) --- */
 .side-watermark {
   margin-top: 20px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.08);
   color: #a0aec0; text-align: center; font-size: 11px; font-weight: 600;
 }
 .side-watermark span { color: var(--pink); font-weight: bold; }
-
+ 
 /* --- 80mm Receipt Strict Styles --- */
 .receipt-container {
     background: #fdfdfd; display: flex; justify-content: center;
@@ -107,7 +107,7 @@ button:active{transform: translateY(0);}
 }
 .rtable th{background:#f0f0f0;font-weight:bold; font-size: 11px;}
 .rtable td.col-name{text-align:right;padding-right:4px; font-weight:bold;}
-
+ 
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:15px;margin-bottom:25px}
 .stat{background:#fff;border:none;border-radius:12px;padding:20px;text-align:center;box-shadow:0 4px 15px rgba(0,0,0,0.04); position: relative; overflow: hidden;}
 .stat::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: var(--pink); }
@@ -115,21 +115,21 @@ button:active{transform: translateY(0);}
 .stat:nth-child(3)::after { background: #27ae60; }
 .stat span{color:#7f8c8d;font-size:14px;font-weight:600}
 .stat b{display:block;font-size:30px;margin-top:10px;color:var(--dark-text)}
-
+ 
 .datatable{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden}
 .datatable th, .datatable td{border-bottom:1px solid var(--border);padding:12px;text-align:center;font-size:14px}
 .datatable th{background:#f8f9fa;color:var(--navy);font-weight:bold}
 .datatable tr:hover{background:#fafdff}
-
+ 
 .tab-content{display:none;animation:fadeIn 0.3s}
 @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
+ 
 .modal-overlay {
     display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(43,66,87,0.8); z-index: 1000; justify-content: center; align-items: center; padding:15px; backdrop-filter: blur(3px);
 }
 .modal-content { background: #fff; padding: 25px; border-radius: 12px; width: 100%; max-width: 350px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-
+ 
 /* --- Mobile Responsiveness --- */
 @media(max-width: 850px){
   .app { flex-direction: column; }
@@ -157,7 +157,7 @@ button:active{transform: translateY(0);}
   .addrow button { grid-column: 1 / -1; margin-top: 5px; }
   .stats { grid-template-columns: 1fr; gap: 10px; }
 }
-
+ 
 /* --- PRINT MEDIA QUERIES --- */
 @page { margin: 0; }
 @media print{
@@ -190,7 +190,7 @@ button:active{transform: translateY(0);}
 </style>
 </head>
 <body>
-
+ 
 <!-- Login Screen -->
 <div id="login-screen">
   <div class="login-box">
@@ -200,22 +200,26 @@ button:active{transform: translateY(0);}
     </div>
     
     <div style="font-size:11px; color:#a0aec0; margin-bottom:15px; font-weight:bold;">تم التطوير بواسطة: <span>OE Vision</span></div>
-
-    <div id="loginError" class="login-error">الكود أو كلمة المرور غير صحيحة!</div>
-    <form onsubmit="event.preventDefault(); attemptLogin();">
-        <div class="field">
-          <label>كود المستخدم</label>
-          <input type="text" id="loginCode" placeholder="أدخل الكود الخاص بك" required autocomplete="off">
-        </div>
-        <div class="field">
-          <label>كلمة المرور</label>
-          <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
-        </div>
-        <button type="submit" class="success" style="font-size: 18px;">تسجيل الدخول</button>
-    </form>
+ 
+    <div id="loginLoading" style="padding:20px 0; color:var(--navy); font-weight:bold;">جاري الاتصال بقاعدة البيانات...</div>
+ 
+    <div id="loginFormWrap" style="display:none;">
+      <div id="loginError" class="login-error">الكود أو كلمة المرور غير صحيحة!</div>
+      <form onsubmit="event.preventDefault(); attemptLogin();">
+          <div class="field">
+            <label>كود المستخدم</label>
+            <input type="text" id="loginCode" placeholder="أدخل الكود الخاص بك" required autocomplete="off">
+          </div>
+          <div class="field">
+            <label>كلمة المرور</label>
+            <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
+          </div>
+          <button type="submit" class="success" style="font-size: 18px;">تسجيل الدخول</button>
+      </form>
+    </div>
   </div>
 </div>
-
+ 
 <!-- Change Password Modal -->
 <div id="pwdModal" class="modal-overlay">
   <div class="modal-content">
@@ -230,7 +234,7 @@ button:active{transform: translateY(0);}
     </div>
   </div>
 </div>
-
+ 
 <!-- Main Application -->
 <div class="app" id="main-app">
   <aside class="side no-print">
@@ -261,7 +265,7 @@ button:active{transform: translateY(0);}
       تم التطوير بواسطة: <span>OE Vision</span>
     </div>
   </aside>
-
+ 
   <main class="main">
     <!-- 1. شاشة أوردر جديد -->
     <div id="tab-new" class="tab-content" style="display:block">
@@ -273,7 +277,7 @@ button:active{transform: translateY(0);}
           <button class="success" onclick="saveAndPrintAction()">🖨️ حفظ وطباعة</button>
         </div>
       </div>
-
+ 
       <div class="grid">
         <section class="card formcard no-print">
           <h3>بيانات الأوردر والعميل</h3>
@@ -288,7 +292,7 @@ button:active{transform: translateY(0);}
             <div class="field full"><label>العنوان بالتفصيل</label><input id="address" placeholder="العنوان ورقم العمارة والشقة"></div>
             <div class="field full"><label>ملاحظات الأوردر العامة</label><textarea id="notes" placeholder="أي ملاحظات عامة للطيار أو التجهيز..."></textarea></div>
           </div>
-
+ 
           <h3 style="margin-top:25px">إضافة صنف للأوردر</h3>
           <div class="addrow">
             <div>
@@ -309,7 +313,7 @@ button:active{transform: translateY(0);}
             <span>إجمالي الكمية: <span id="totalQty" style="color:var(--navy); font-size:18px;">0</span></span>
           </div>
         </section>
-
+ 
         <section class="card receipt-container">
           <div style="width:100%;">
               <h3 class="no-print" style="text-align:center;">معاينة الفاتورة (80mm)</h3>
@@ -321,7 +325,7 @@ button:active{transform: translateY(0);}
         </section>
       </div>
     </div>
-
+ 
     <!-- 2. شاشة قسم الفريشات -->
     <div id="tab-fresh" class="tab-content no-print">
       <div class="top">
@@ -338,7 +342,7 @@ button:active{transform: translateY(0);}
             <div class="field"><label>اسم العميل</label><input id="freshCustomer" placeholder="اسم العميل"></div>
             <div class="field"><label>القسم / الشيف</label><input id="freshSection" placeholder="مثال: شيف الجبن / اللحوم"></div>
           </div>
-
+ 
           <h3 style="margin-top:25px">إضافة منتجات فريش</h3>
           <div class="addrow">
             <div>
@@ -349,13 +353,13 @@ button:active{transform: translateY(0);}
             <input id="freshItemNote" type="text" placeholder="ملاحظات للقسم">
             <button class="primary" onclick="addFreshItem()">إضافة ＋</button>
           </div>
-
+ 
           <table class="items">
             <thead><tr><th>#</th><th>الصنف</th><th>الكمية</th><th>الوزن</th><th>ملاحظات</th><th>إجراء</th></tr></thead>
             <tbody id="freshItemsBody"></tbody>
           </table>
         </section>
-
+ 
         <section class="card receipt-container">
           <div style="width:100%;">
               <h3 style="text-align:center;">معاينة تكت الفريشات (80mm)</h3>
@@ -367,7 +371,7 @@ button:active{transform: translateY(0);}
         </section>
       </div>
     </div>
-
+ 
     <!-- باقي التبويبات -->
     <div id="tab-suspended" class="tab-content no-print">
       <div class="top"><h1>الأوردرات المعلقة</h1></div>
@@ -378,7 +382,7 @@ button:active{transform: translateY(0);}
         </table>
       </div>
     </div>
-
+ 
     <div id="tab-search" class="tab-content no-print">
       <div class="top"><h1>البحث والأرشيف</h1></div>
       <div class="card">
@@ -389,7 +393,7 @@ button:active{transform: translateY(0);}
         </table>
       </div>
     </div>
-
+ 
     <div id="tab-cancel" class="tab-content no-print">
       <div class="top"><h1>إلغاء الأوردرات</h1></div>
       <div class="card">
@@ -400,7 +404,7 @@ button:active{transform: translateY(0);}
         </table>
       </div>
     </div>
-
+ 
     <div id="tab-reports" class="tab-content no-print">
       <div class="top"><h1>التقارير والإكسيل</h1><button class="export-btn" onclick="exportToExcel()">📥 تصدير Excel</button></div>
       <div class="card no-print" style="margin-bottom: 20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:#f8f9fa;">
@@ -414,7 +418,7 @@ button:active{transform: translateY(0);}
         <div class="stat"><span>الحالة</span><b style="color:var(--pink); font-size:20px;">نشط</b></div>
       </div>
     </div>
-
+ 
     <div id="tab-users" class="tab-content no-print manager-only">
       <div class="top"><h1>إدارة الموظفين</h1></div>
       <div class="card">
@@ -434,136 +438,110 @@ button:active{transform: translateY(0);}
         </table>
       </div>
     </div>
-
+ 
   </main>
 </div>
-
+ 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ===== Supabase addition: existing UI/code is kept intact ===== */
-const SUPABASE_URL = "https://bmvhnhaeqllpofcpxjcj.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_B1GNr7YbqXRj5JF2acFUBw_IBzpbdNE";
-const supabaseClient = (window.supabase)
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
-
-const CLOUD_TABLES = { orders: "orders" };
-
-/* Cloud storage uses the EXISTING orders table columns shown in Supabase.
-   Extra order metadata is packed into the existing notes JSON-safe envelope so
-   we do not require changing the current table before the first test. */
-function orderToCloudRow(o) {
+/* ============================================================
+   إعدادات الاتصال بـ Supabase
+   حط هنا الـ Project URL و anon public key بتوع مشروعك
+   (هتلاقيهم في Supabase: Project Settings > API)
+   ============================================================ */
+const SUPABASE_URL = "PASTE_YOUR_SUPABASE_PROJECT_URL_HERE";
+const SUPABASE_ANON_KEY = "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+ 
+function toDbOrderRow(o) {
   return {
-    customer: String(o.customer || ""),
-    phone: String(o.phone || ""),
-    area: String(o.area || ""),
-    address: String(o.address || ""),
-    notes: JSON.stringify({
-      __oms_meta: true,
-      orderId: String(o.id || ""),
-      notes: String(o.notes || ""),
-      date: String(o.date || ""),
-      isoDate: String(o.isoDate || ""),
-      cashierCode: String(o.cashierCode || ""),
-      status: String(o.status || "new")
-    }),
-    window_num: String(o.windowNum || ""),
-    items: Array.isArray(o.items) ? o.items : [],
-    cashier_name: String(o.cashierName || "")
+    id: Number(o.id),
+    cashier_code: o.cashierCode,
+    window_num: Number(o.windowNum) || null,
+    customer: o.customer,
+    phone: o.phone,
+    area: o.area,
+    address: o.address,
+    notes: o.notes,
+    order_date: o.date,
+    iso_date: o.isoDate,
+    items: o.items,
+    cashier_name: o.cashierName
   };
 }
-
-function cloudRowToOrder(r) {
-  let meta = {};
-  try { meta = r.notes ? JSON.parse(r.notes) : {}; } catch (_) {}
+ 
+function fromDbOrderRow(r) {
   return {
-    id: meta.orderId || (r.id != null ? String(r.id) : String(Date.now())),
-    windowNum: r.window_num || "",
-    customer: r.customer || "",
-    phone: r.phone || "",
-    area: r.area || "",
-    address: r.address || "",
-    notes: meta.__oms_meta ? (meta.notes || "") : (r.notes || ""),
-    date: meta.date || "",
-    isoDate: meta.isoDate || "",
-    items: Array.isArray(r.items) ? r.items : [],
-    cashierCode: meta.cashierCode || "",
-    cashierName: r.cashier_name || "",
-    status: meta.status || "new"
+    id: r.id,
+    windowNum: r.window_num,
+    customer: r.customer,
+    phone: r.phone,
+    area: r.area,
+    address: r.address,
+    notes: r.notes,
+    date: r.order_date,
+    isoDate: r.iso_date,
+    items: r.items || [],
+    cashierCode: r.cashier_code,
+    cashierName: r.cashier_name
   };
 }
-
-async function cloudSyncOrders() {
-  if (!supabaseClient) return false;
-  try {
-    // Insert each new/updated order into the existing table.
-    // The current table has no unique order key, so we append the order.
-    // A browser-side marker prevents duplicate saves during the same session.
-    for (const o of orders) {
-      const marker = "oms_cloud_saved_" + String(o.id) + "_" + String(o.cashierCode || "");
-      if (sessionStorage.getItem(marker)) continue;
-      const { error } = await supabaseClient.from(CLOUD_TABLES.orders).insert(orderToCloudRow(o));
-      if (error) {
-        console.error("Supabase insert error:", error);
-        return false;
-      }
-      sessionStorage.setItem(marker, "1");
-    }
-    return true;
-  } catch (e) {
-    console.error("Supabase sync error:", e);
-    return false;
-  }
-}
-
-async function cloudLoadOrders() {
-  if (!supabaseClient) return;
-  try {
-    const { data, error } = await supabaseClient
-      .from(CLOUD_TABLES.orders)
-      .select("customer,phone,area,address,notes,window_num,items,cashier_name")
-      .order("customer", { ascending: true });
-    if (error) {
-      console.error("Supabase load error:", error);
-      return;
-    }
-    if (Array.isArray(data) && data.length) {
-      const cloudOrders = data.map(cloudRowToOrder);
-      const byId = new Map(cloudOrders.map(o => [String(o.id), o]));
-      // Keep any local orders that are not yet in the cloud, then prefer cloud data.
-      for (const localOrder of orders) {
-        const key = String(localOrder.id);
-        if (!byId.has(key)) byId.set(key, localOrder);
-      }
-      orders = Array.from(byId.values());
-      localStorage.setItem("oms_orders_v32", JSON.stringify(orders));
-    }
-  } catch (e) {
-    console.error("Supabase load error:", e);
-  }
-}
-
+ 
 function toEnglishNumbers(str) {
   const arabicNumbers = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
   let res = String(str ?? '');
   for(let i=0; i<10; i++) res = res.replace(new RegExp(arabicNumbers[i], 'g'), i);
   return res;
 }
-
-let users = JSON.parse(localStorage.getItem("oms_users_v32")) || [
-  { code: 'admin', password: 'admin', name: 'مدير النظام (Team Manager)', role: 'manager' },
-  { code: '1', password: '123456789', name: 'عمر الزناتي', role: 'cashier' }
-];
+ 
+let users = [];
 let currentUser = null;
-
-let orders = JSON.parse(localStorage.getItem("oms_orders_v32") || "[]");
-let suspendedOrders = JSON.parse(localStorage.getItem("oms_suspended_v32") || "[]");
+ 
+let orders = [];
+let suspendedOrders = [];
 let currentItems = [];
 let freshItems = [];
 let editingSuspendedId = null;
-
+ 
+async function loadUsers() {
+  try {
+    let { data, error } = await sb.from('users').select('*');
+    if (error) throw error;
+    users = data || [];
+  } catch (e) {
+    alert("تعذر الاتصال بقاعدة البيانات (المستخدمين): " + e.message);
+    users = [];
+  }
+}
+ 
+async function loadOrders() {
+  try {
+    let { data, error } = await sb.from('orders').select('*').order('iso_date', { ascending: false });
+    if (error) throw error;
+    orders = (data || []).map(fromDbOrderRow);
+  } catch (e) {
+    alert("تعذر تحميل الأوردرات من قاعدة البيانات: " + e.message);
+    orders = [];
+  }
+}
+ 
+async function loadSuspendedOrders() {
+  try {
+    let { data, error } = await sb.from('suspended_orders').select('*').order('iso_date', { ascending: false });
+    if (error) throw error;
+    suspendedOrders = (data || []).map(fromDbOrderRow);
+  } catch (e) {
+    alert("تعذر تحميل الأوردرات المعلقة من قاعدة البيانات: " + e.message);
+    suspendedOrders = [];
+  }
+}
+ 
+async function loadAllData() {
+  await Promise.all([loadUsers(), loadOrders(), loadSuspendedOrders()]);
+}
+ 
 window.addEventListener('DOMContentLoaded', async () => {
-    await cloudLoadOrders();
+    await loadAllData();
     let savedUserJson = sessionStorage.getItem("oms_current_user_v32");
     if (savedUserJson) {
         currentUser = JSON.parse(savedUserJson);
@@ -578,9 +556,14 @@ window.addEventListener('DOMContentLoaded', async () => {
         initNewOrderFields();
         renderFreshReceipt();
         switchTab('tab-new');
+    } else {
+        let loading = document.getElementById("loginLoading");
+        let formWrap = document.getElementById("loginFormWrap");
+        if (loading) loading.style.display = 'none';
+        if (formWrap) formWrap.style.display = 'block';
     }
 });
-
+ 
 function attemptLogin() {
   let code = toEnglishNumbers(document.getElementById("loginCode").value.trim());
   let pwd = toEnglishNumbers(document.getElementById("loginPassword").value.trim());
@@ -610,45 +593,53 @@ function attemptLogin() {
     errorMsg.style.display = 'block';
   }
 }
-
+ 
 function logout() {
   currentUser = null;
   sessionStorage.removeItem("oms_current_user_v32");
   document.getElementById("main-app").style.display = 'none';
   document.getElementById("login-screen").style.display = 'flex';
 }
-
-function saveNewPassword() {
+ 
+async function saveNewPassword() {
   let newP = document.getElementById("newPwd").value.trim();
   if(!newP) { alert("برجاء كتابة باسورد جديد"); return; }
   let uIndex = users.findIndex(u => u.code === currentUser.code);
   if(uIndex > -1) {
-    users[uIndex].password = newP;
-    localStorage.setItem("oms_users_v32", JSON.stringify(users));
-    cloudSyncOrders();
-    alert("تم تغيير كلمة المرور بنجاح!");
-    document.getElementById('pwdModal').style.display = 'none';
-    document.getElementById("newPwd").value = '';
+    try {
+      let { error } = await sb.from('users').update({ password: newP }).eq('code', currentUser.code);
+      if (error) throw error;
+      users[uIndex].password = newP;
+      alert("تم تغيير كلمة المرور بنجاح!");
+      document.getElementById('pwdModal').style.display = 'none';
+      document.getElementById("newPwd").value = '';
+    } catch (e) {
+      alert("حصل خطأ أثناء تحديث كلمة المرور: " + e.message);
+    }
   }
 }
-
-function createNewUser() {
+ 
+async function createNewUser() {
   if (currentUser.role !== 'manager') return;
   let n = document.getElementById("newUserName").value.trim();
   let c = document.getElementById("newUserCode").value.trim();
   let p = document.getElementById("newUserPwd").value.trim();
   if(!n || !c || !p) { alert("أكمل جميع البيانات"); return; }
   if(users.find(u => u.code === c)) { alert("هذا الكود مستخدم بالفعل!"); return; }
-  users.push({ name: n, code: c, password: p, role: 'cashier' });
-  localStorage.setItem("oms_users_v32", JSON.stringify(users));
-  cloudSyncOrders();
-  document.getElementById("newUserName").value = "";
-  document.getElementById("newUserCode").value = "";
-  document.getElementById("newUserPwd").value = "";
-  alert("تم إضافة الموظف بنجاح!");
-  renderUsersList();
+  try {
+    let { error } = await sb.from('users').insert({ name: n, code: c, password: p, role: 'cashier' });
+    if (error) throw error;
+    users.push({ name: n, code: c, password: p, role: 'cashier' });
+    document.getElementById("newUserName").value = "";
+    document.getElementById("newUserCode").value = "";
+    document.getElementById("newUserPwd").value = "";
+    alert("تم إضافة الموظف بنجاح!");
+    renderUsersList();
+  } catch (e) {
+    alert("حصل خطأ أثناء إضافة الموظف: " + e.message);
+  }
 }
-
+ 
 function renderUsersList() {
   let b = document.getElementById("usersListBody");
   b.innerHTML = users.map((u, i) => `
@@ -660,51 +651,39 @@ function renderUsersList() {
     </tr>
   `).join("");
 }
-
-function deleteUser(index) {
+ 
+async function deleteUser(index) {
   if (users[index].code === 'admin') return;
   if(confirm("حذف هذا الموظف؟")) {
-    users.splice(index, 1);
-    localStorage.setItem("oms_users_v32", JSON.stringify(users));
-    cloudSyncOrders();
-    renderUsersList();
+    try {
+      let { error } = await sb.from('users').delete().eq('code', users[index].code);
+      if (error) throw error;
+      users.splice(index, 1);
+      renderUsersList();
+    } catch (e) {
+      alert("حصل خطأ أثناء حذف الموظف: " + e.message);
+    }
   }
 }
-
-function saveData() {
-  localStorage.setItem("oms_orders_v32", JSON.stringify(orders));
-  localStorage.setItem("oms_suspended_v32", JSON.stringify(suspendedOrders));
-  cloudSyncOrders();
-}
-
+ 
 function getNextId() {
   if (!currentUser) return 100;
-  let key = "oms_seq_v32_" + currentUser.code;
-  let seq = localStorage.getItem(key);
-  if (!seq) {
-    seq = "99";
-    localStorage.setItem(key, seq);
-  }
-  return parseInt(seq) + 1;
+  let maxId = 99;
+  [...orders, ...suspendedOrders].forEach(o => {
+    if (o.cashierCode === currentUser.code && Number(o.id) > maxId) maxId = Number(o.id);
+  });
+  return maxId + 1;
 }
-
-function incrementId() {
-  if (!currentUser) return 100;
-  let key = "oms_seq_v32_" + currentUser.code;
-  let current = getNextId();
-  localStorage.setItem(key, current);
-  return current;
-}
-
+ 
 function now() {
   let d = new Date();
   return d.toLocaleDateString("en-GB") + " - " + d.toLocaleTimeString("ar-EG", {hour:"2-digit",minute:"2-digit"});
 }
-
+ 
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
 }
-
+ 
 function switchTab(tabId) {
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
   document.querySelectorAll('.nav button').forEach(el => el.classList.remove('active'));
@@ -720,7 +699,7 @@ function switchTab(tabId) {
   if(tabId === 'tab-reports') updateStats();
   if(tabId === 'tab-users') renderUsersList();
 }
-
+ 
 function initNewOrderFields() {
     let nextNum = getNextId();
     document.getElementById("orderId").value = nextNum;
@@ -729,7 +708,7 @@ function initNewOrderFields() {
     document.getElementById("orderDate").value = now();
     renderReceipt();
 }
-
+ 
 function clearOrder() {
   editingSuspendedId = null;
   initNewOrderFields();
@@ -744,7 +723,7 @@ function clearOrder() {
   let cust = document.getElementById("customer");
   if(cust) cust.focus();
 }
-
+ 
 function addItem() {
   let name = document.getElementById("productName").value.trim();
   let q = Math.max(1, parseInt(document.getElementById("qty").value) || 1);
@@ -762,9 +741,9 @@ function addItem() {
   document.getElementById("productName").focus();
   renderItems(); renderReceipt();
 }
-
+ 
 function removeItem(i) { currentItems.splice(i, 1); renderItems(); renderReceipt(); }
-
+ 
 function renderItems() {
   let b = document.getElementById("itemsBody");
   b.innerHTML = currentItems.map((x, i) => `
@@ -781,7 +760,7 @@ function renderItems() {
   document.getElementById("itemCount").textContent = currentItems.length;
   document.getElementById("totalQty").textContent = currentItems.reduce((a, x) => a + x.qty, 0);
 }
-
+ 
 function renderReceipt() {
   let id = document.getElementById("orderId").value || getNextId();
   let wNum = document.getElementById("windowNum").value || 1;
@@ -800,7 +779,7 @@ function renderReceipt() {
       <td>${esc(x.note || '-')}</td>
     </tr>
   `).join("");
-
+ 
   document.getElementById("receipt").innerHTML = `
     <div style="text-align:center; margin-bottom:12px;">
       <h2 style="margin:0; font-size:28px; font-weight:900; color:#000; letter-spacing:-1px;">فلامنجو</h2>
@@ -836,7 +815,7 @@ function renderReceipt() {
     </div>
   `;
 }
-
+ 
 /* --- Fresh Section Logic --- */
 function addFreshItem() {
   let name = document.getElementById("freshProductName").value.trim();
@@ -855,9 +834,9 @@ function addFreshItem() {
   document.getElementById("freshProductName").focus();
   renderFreshItems(); renderFreshReceipt();
 }
-
+ 
 function removeFreshItem(i) { freshItems.splice(i, 1); renderFreshItems(); renderFreshReceipt(); }
-
+ 
 function renderFreshItems() {
   let b = document.getElementById("freshItemsBody");
   b.innerHTML = freshItems.map((x, i) => `
@@ -871,7 +850,7 @@ function renderFreshItems() {
     </tr>
   `).join("");
 }
-
+ 
 function renderFreshReceipt() {
   let wNum = document.getElementById("freshWindow").value || 1;
   let customer = document.getElementById("freshCustomer").value || "—";
@@ -885,7 +864,7 @@ function renderFreshReceipt() {
       <td>${esc(x.note || '-')}</td>
     </tr>
   `).join("");
-
+ 
   document.getElementById("freshReceipt").innerHTML = `
     <div style="text-align:center; margin-bottom:10px;">
       <h2 style="margin:0; font-size:22px; font-weight:900; color:#000;">${esc(section)}</h2>
@@ -911,7 +890,7 @@ function renderFreshReceipt() {
     </table>
   `;
 }
-
+ 
 function printFreshTicket() {
   if(freshItems.length === 0) { alert("أضف منتجات فريش أولاً للطباعة!"); return; }
   renderFreshReceipt();
@@ -919,11 +898,11 @@ function printFreshTicket() {
       window.print();
   }, 300);
 }
-
+ 
 function collectData() {
   return {
-    id: document.getElementById("orderId").value,
-    windowNum: document.getElementById("windowNum").value,
+    id: Number(document.getElementById("orderId").value),
+    windowNum: Number(document.getElementById("windowNum").value),
     customer: document.getElementById("customer").value.trim(),
     phone: document.getElementById("phone").value.trim(),
     area: document.getElementById("area").value.trim(),
@@ -936,30 +915,36 @@ function collectData() {
     cashierName: currentUser.name
   };
 }
-
-function performSave() {
+ 
+async function performSave() {
   if(!document.getElementById("customer").value.trim() && !document.getElementById("phone").value.trim() && currentItems.length === 0) { 
       alert("أدخل بيانات العميل أو الأصناف أولاً!"); 
       return false; 
   }
-
-  incrementId();
+ 
   let o = collectData();
-  if(editingSuspendedId) {
-    suspendedOrders = suspendedOrders.filter(x => x.id !== editingSuspendedId);
-    editingSuspendedId = null;
+  try {
+    let { error } = await sb.from('orders').insert(toDbOrderRow(o));
+    if (error) throw error;
+    if(editingSuspendedId) {
+      await sb.from('suspended_orders').delete().eq('id', editingSuspendedId).eq('cashier_code', currentUser.code);
+      suspendedOrders = suspendedOrders.filter(x => x.id !== editingSuspendedId);
+      editingSuspendedId = null;
+    }
+    orders.unshift(o);
+    return true;
+  } catch (e) {
+    alert("حصل خطأ أثناء حفظ الأوردر على قاعدة البيانات: " + e.message);
+    return false;
   }
-  orders.unshift(o);
-  saveData(); 
-  return true;
 }
-
-function saveOrderAction() {
-  if(performSave()) { clearOrder(); }
+ 
+async function saveOrderAction() {
+  if(await performSave()) { clearOrder(); }
 }
-
-function saveAndPrintAction() {
-  if(performSave()) {
+ 
+async function saveAndPrintAction() {
+  if(await performSave()) {
       renderReceipt();
       setTimeout(() => {
           window.print();
@@ -967,23 +952,31 @@ function saveAndPrintAction() {
       }, 300);
   }
 }
-
-function suspendOrder() {
+ 
+async function suspendOrder() {
   if(!document.getElementById("customer").value.trim() && !document.getElementById("phone").value.trim() && currentItems.length === 0) { alert("لا يوجد بيانات!"); return; }
-  incrementId();
   let o = collectData();
-  if(editingSuspendedId) suspendedOrders = suspendedOrders.filter(x => x.id !== editingSuspendedId);
-  suspendedOrders.unshift(o);
-  saveData(); 
+  try {
+    if(editingSuspendedId) {
+      await sb.from('suspended_orders').delete().eq('id', editingSuspendedId).eq('cashier_code', currentUser.code);
+      suspendedOrders = suspendedOrders.filter(x => x.id !== editingSuspendedId);
+    }
+    let { error } = await sb.from('suspended_orders').insert(toDbOrderRow(o));
+    if (error) throw error;
+    suspendedOrders.unshift(o);
+  } catch (e) {
+    alert("حصل خطأ أثناء تعليق الأوردر: " + e.message);
+    return;
+  }
   alert("تم تعليق الأوردر!");
   clearOrder(); 
 }
-
+ 
 function getFilteredList(rawList) {
   if(currentUser.role === 'manager') return rawList;
   return rawList.filter(x => x.cashierCode === currentUser.code);
 }
-
+ 
 function renderSuspended() {
   let list = getFilteredList(suspendedOrders);
   let b = document.getElementById("suspendedBody");
@@ -1002,7 +995,7 @@ function renderSuspended() {
     </tr>`;
   }).join("");
 }
-
+ 
 function resumeSuspended(index) {
   let list = getFilteredList(suspendedOrders);
   let o = list[index];
@@ -1016,16 +1009,22 @@ function resumeSuspended(index) {
   currentItems = o.items ? JSON.parse(JSON.stringify(o.items)) : [];
   switchTab('tab-new'); renderItems(); renderReceipt();
 }
-
-function deleteSuspended(index) {
+ 
+async function deleteSuspended(index) {
   if(confirm("حذف الأوردر المعلق؟")) {
     let list = getFilteredList(suspendedOrders);
     let o = list[index];
     let realIndex = suspendedOrders.findIndex(x => x.id === o.id && x.cashierCode === o.cashierCode);
-    if(realIndex > -1) { suspendedOrders.splice(realIndex, 1); saveData(); renderSuspended(); }
+    try {
+      let { error } = await sb.from('suspended_orders').delete().eq('id', o.id).eq('cashier_code', o.cashierCode);
+      if (error) throw error;
+      if(realIndex > -1) { suspendedOrders.splice(realIndex, 1); renderSuspended(); }
+    } catch (e) {
+      alert("حصل خطأ أثناء الحذف: " + e.message);
+    }
   }
 }
-
+ 
 function renderHistory() {
   let q = (document.getElementById("historySearch").value || "").trim().toLowerCase();
   let list = getFilteredList(orders).filter(o => {
@@ -1047,7 +1046,7 @@ function renderHistory() {
     </tr>`;
   }).join("");
 }
-
+ 
 function loadOrderToPrint(id, cashierCode) {
   let o = orders.find(x => x.id == id && x.cashierCode == cashierCode);
   if(!o) return;
@@ -1060,7 +1059,7 @@ function loadOrderToPrint(id, cashierCode) {
   currentItems = o.items ? JSON.parse(JSON.stringify(o.items)) : [];
   switchTab('tab-new'); renderItems(); renderReceipt();
 }
-
+ 
 function renderCancelList() {
   let q = (document.getElementById("cancelSearch").value || "").trim().toLowerCase();
   let list = getFilteredList(orders).filter(o => {
@@ -1080,14 +1079,20 @@ function renderCancelList() {
     </tr>
   `).join("");
 }
-
-function deleteOrderForever(id, cashierCode) {
+ 
+async function deleteOrderForever(id, cashierCode) {
   if(confirm("حذف نهائي؟")) {
-    orders = orders.filter(x => !(x.id == id && x.cashierCode == cashierCode)); 
-    saveData(); renderCancelList();
+    try {
+      let { error } = await sb.from('orders').delete().eq('id', id).eq('cashier_code', cashierCode);
+      if (error) throw error;
+      orders = orders.filter(x => !(x.id == id && x.cashierCode == cashierCode)); 
+      renderCancelList();
+    } catch (e) {
+      alert("حصل خطأ أثناء الحذف: " + e.message);
+    }
   }
 }
-
+ 
 let filteredOrdersForReport = [];
 function getOrderISODate(o) {
   if (o.isoDate) return o.isoDate.split("T")[0];
@@ -1097,7 +1102,7 @@ function getOrderISODate(o) {
   } catch(e) {}
   return "";
 }
-
+ 
 function filterReports() {
   let dFrom = document.getElementById("dateFrom").value;
   let dTo = document.getElementById("dateTo").value;
@@ -1111,14 +1116,14 @@ function filterReports() {
   });
   updateStatsUI();
 }
-
+ 
 function updateStatsUI() {
   let tQ = 0;
   filteredOrdersForReport.forEach(o => o.items.forEach(i => { tQ += i.qty; }));
   document.getElementById("sOrders").textContent = filteredOrdersForReport.length;
   document.getElementById("sQty").textContent = tQ;
 }
-
+ 
 function updateStats() {
   if (!document.getElementById("dateFrom").value) {
      let today = new Date().toISOString().split("T")[0];
@@ -1126,7 +1131,7 @@ function updateStats() {
   }
   filterReports();
 }
-
+ 
 function exportToExcel() {
   if(filteredOrdersForReport.length === 0) { alert("لا توجد بيانات للتصدير."); return; }
   let csvContent = "\uFEFFرقم الأوردر,التاريخ,الشباك,العميل,الموبايل,المنطقة,العنوان,الكمية الكلية,الكاشير\n";
@@ -1139,12 +1144,12 @@ function exportToExcel() {
   link.download = "Flamingo_Orders_Reports_" + new Date().toISOString().split('T')[0] + ".csv";
   link.click();
 }
-
+ 
 ["customer", "phone", "area", "address", "notes"].forEach(x => {
   let el = document.getElementById(x);
   if(el) el.addEventListener("input", renderReceipt);
 });
-
+ 
 ["freshWindow", "freshCustomer", "freshSection"].forEach(x => {
   let el = document.getElementById(x);
   if(el) el.addEventListener("input", renderFreshReceipt);
@@ -1152,5 +1157,3 @@ function exportToExcel() {
 </script>
 </body>
 </html>
-index_supabase_connected.html
-HTML
