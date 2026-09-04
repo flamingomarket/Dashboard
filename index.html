@@ -325,7 +325,7 @@ button:active{transform: translateY(0);}
 </div>
 
 <script>
-// إعدادات Supabase السحابي بالمفاتيح الحقيقية التي أرسلتها
+// إعدادات Supabase السحابي المحدثة
 const SUPABASE_URL = 'https://bmvhnhaeqllpofcpxjcj.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_B1GNr7YbqXRj5JF2acFUBw_IBzpbdNE';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -346,7 +346,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (savedUserJson) {
         currentUser = JSON.parse(savedUserJson);
         startApp();
-        await fetchOrdersFromCloud(); // جلب البيانات تلقائياً سحابياً فور فتح أي جهاز
+        await fetchOrdersFromCloud();
     }
 });
 
@@ -368,7 +368,7 @@ async function attemptLogin() {
     currentUser = user;
     sessionStorage.setItem("oms_current_user_v32", JSON.stringify(user));
     startApp();
-    await fetchOrdersFromCloud(); // جلب الأوردرات من السحاب فور تسجيل الدخول من الموبايل أو اللاب
+    await fetchOrdersFromCloud();
   } else {
     document.getElementById("loginError").style.display = 'block';
   }
@@ -430,32 +430,35 @@ function deleteUser(index) {
   }
 }
 
-// دالة حفظ الأوردر في Supabase سحابياً ليتزامن فوريًا بين الموبايل واللاب
+// دالة حفظ الأوردر المحدثة بالكامل وبدون أي أخطاء مطبعية للأعمدة
 async function saveOrderToCloud(orderData) {
     try {
-        const { error } = await _supabase.from('orders').insert([{
-            customer: orderData.customer || "عميل عام",
-            phone: orderData.phone || "",
-            area: orderData.area || "",
-            addaddress: orderData.address || "",
-            notes: orderData.notes || "",
+        const payload = {
+            customer: String(orderData.customer || "عميل عام"),
+            phone: String(orderData.phone || ""),
+            area: String(orderData.area || ""),
+            addaddress: String(orderData.address || ""),
+            notes: String(orderData.notes || ""),
             window_num: parseInt(orderData.windowNum) || 1,
             items: orderData.items || [],
-            cashier_name: orderData.cashierName || currentUser.name
-        }]);
+            cashier_name: String(orderData.cashierName || (currentUser ? currentUser.name : "كاشير"))
+        };
+
+        const { data, error } = await _supabase.from('orders').insert([payload]);
 
         if (error) {
-            console.error('خطأ في الحفظ السحابي:', error.message);
-            alert('خطأ في الاتصال بالسحاب: ' + error.message);
+            console.error('تفاصيل خطأ Supabase:', error.message);
+            alert('فشل الحفظ السحابي: ' + error.message);
         } else {
+            console.log('تم الحفظ في السحاب بنجاح:', data);
             await fetchOrdersFromCloud();
         }
     } catch (err) {
-        console.error('خطأ غير متوقع:', err);
+        console.error('خطأ غير متوقع أثناء الحفظ:', err);
     }
 }
 
-// دالة جلب الأوردرات من Supabase سحابياً (المدير يرى الكل، والكاشير يرى أوردراته)
+// دالة جلب الأوردرات من Supabase سحابياً
 async function fetchOrdersFromCloud() {
     try {
         const { data, error } = await _supabase.from('orders').select('*').order('created_at', { ascending: false });
@@ -463,7 +466,6 @@ async function fetchOrdersFromCloud() {
 
         let allCloudOrders = data || [];
         
-        // التعديل الجوهري: المدير (Manager) يرى كل أوردرات الكاشيرية من أي جهاز، والكاشير يرى أوردراته فقط
         if (currentUser && currentUser.role !== 'manager') {
             allCloudOrders = allCloudOrders.filter(o => o.cashier_name === currentUser.name);
         }
@@ -589,7 +591,7 @@ function renderHistory() {
   b.innerHTML = list.map(o => `<tr><td><b>${o.id}</b></td><td>${o.date}</td><td>${o.windowNum}</td><td>${o.customer}</td><td>${o.phone}</td><td>${o.items.reduce((a,x)=>a+x.qty,0)}</td><td><b>${o.cashierName}</b></td><td>-</td></tr>`).join("");
 }
 
-// دالة فلترة التقارير والإكسيل لتشمل كافة الأوردرات المجلوبة من السحاب
+// دالة فلترة التقارير والإكسيل
 let filteredOrdersForReport = [];
 function filterReports() {
   filteredOrdersForReport = orders; 
