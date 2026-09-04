@@ -231,13 +231,8 @@ button:active{transform: translateY(0);}
       </div>
     </div>
 
-    <div id="tab-fresh" class="tab-content no-print">
-      <div class="top"><h1>قسم الفريشات</h1></div>
-    </div>
-    <div id="tab-suspended" class="tab-content no-print">
-      <div class="top"><h1>الأوردرات المعلقة</h1></div>
-      <div class="card"><table class="datatable"><tbody id="suspendedBody"></tbody></table></div>
-    </div>
+    <div id="tab-fresh" class="tab-content no-print"><div class="top"><h1>قسم الفريشات</h1></div></div>
+    <div id="tab-suspended" class="tab-content no-print"><div class="top"><h1>الأوردرات المعلقة</h1></div><div class="card"><table class="datatable"><tbody id="suspendedBody"></tbody></table></div></div>
     <div id="tab-search" class="tab-content no-print">
       <div class="top"><h1>البحث والأرشيف</h1></div>
       <div class="card">
@@ -249,7 +244,22 @@ button:active{transform: translateY(0);}
       </div>
     </div>
     <div id="tab-cancel" class="tab-content no-print"><div class="top"><h1>إلغاء الأوردرات</h1></div></div>
-    <div id="tab-reports" class="tab-content no-print"><div class="top"><h1>التقارير</h1></div></div>
+    
+    <!-- قسم التقارير والإكسيل المحدث -->
+    <div id="tab-reports" class="tab-content no-print">
+      <div class="top"><h1>التقارير والإكسيل</h1><button class="export-btn" onclick="exportToExcel()">📥 تصدير Excel</button></div>
+      <div class="card no-print" style="margin-bottom: 20px; display:flex; gap:12px; align-items:center; flex-wrap:wrap; background:#f8f9fa;">
+        <b>من:</b> <input type="date" id="dateFrom" style="padding:8px; border:2px solid #e0e6ed; border-radius:8px;">
+        <b>إلى:</b> <input type="date" id="dateTo" style="padding:8px; border:2px solid #e0e6ed; border-radius:8px;">
+        <button class="primary" onclick="filterReports()">تنفيذ</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><span>عدد الأوردرات</span><b id="sOrders">0</b></div>
+        <div class="stat"><span>الكميات الكلية</span><b id="sQty">0</b></div>
+        <div class="stat"><span>الحالة السحابية</span><b style="color:var(--pink); font-size:18px;">متصل بالبنية السحابية</b></div>
+      </div>
+    </div>
+
     <div id="tab-users" class="tab-content no-print manager-only"><div class="top"><h1>الموظفين</h1></div></div>
   </main>
 </div>
@@ -257,7 +267,7 @@ button:active{transform: translateY(0);}
 <script>
 // إعدادات Supabase السحابي
 const SUPABASE_URL = 'https://bmvhnhaeqllpofcpxjcj.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtdmhuaGFlcWxscG9mY3B4amNqIiwicm9sZSI6ImFub24iLCJpYXQiOjM0ODQyNTU2NzMsImV4cCI6MTU2MzkwOTI3M30.ضع_مفتاحك_الصحيح_هنا'; // تأكد من وضع المفتاح الخاص بك
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJtdmhuaGFlcWxscG9mY3B4amNqIiwicm9sZSI6ImFub24iLCJpYXQiOjM0ODQyNTU2NzMsImV4cCI6MTU2MzkwOTI3M30.ضع_مفتاحك_الصحيح_هنا';
 const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let users = JSON.parse(localStorage.getItem("oms_users_v32")) || [
@@ -275,11 +285,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     if (savedUserJson) {
         currentUser = JSON.parse(savedUserJson);
         startApp();
-        await fetchOrdersFromCloud();
+        await fetchOrdersFromCloud(); // جلب البيانات تلقائياً أول ما يفتح من أي جهاز (موبايل أو لاب)
     }
 });
 
-function startApp() {
+async function startApp() {
     document.getElementById("login-screen").style.display = 'none';
     document.getElementById("main-app").style.display = 'flex';
     document.getElementById("displayUserName").textContent = currentUser.name;
@@ -288,7 +298,7 @@ function startApp() {
     switchTab('tab-new');
 }
 
-function attemptLogin() {
+async function attemptLogin() {
   let code = document.getElementById("loginCode").value.trim();
   let pwd = document.getElementById("loginPassword").value.trim();
   let user = users.find(u => u.code === code && u.password === pwd);
@@ -296,7 +306,7 @@ function attemptLogin() {
     currentUser = user;
     sessionStorage.setItem("oms_current_user_v32", JSON.stringify(user));
     startApp();
-    fetchOrdersFromCloud();
+    await fetchOrdersFromCloud(); // جلب الداتا فور تسجيل الدخول من أي جهاز
   } else {
     document.getElementById("loginError").style.display = 'block';
   }
@@ -354,6 +364,7 @@ async function fetchOrdersFromCloud() {
             address: o.addaddress,
             notes: o.notes,
             date: new Date(o.created_at).toLocaleString("ar-EG"),
+            isoDate: o.created_at,
             items: o.items || [],
             cashierName: o.cashier_name
         }));
@@ -372,6 +383,7 @@ function switchTab(tabId) {
   let activeBtn = document.getElementById('btn-' + tabId);
   if(activeBtn) activeBtn.classList.add('active');
   if(tabId === 'tab-search') renderHistory();
+  if(tabId === 'tab-reports') updateStats();
 }
 
 function initNewOrderFields() {
@@ -444,6 +456,42 @@ function suspendOrder() { alert("تم تعليق الأوردر محلياً"); 
 function renderHistory() {
   let b = document.getElementById("historyBody");
   b.innerHTML = orders.map(o => `<tr><td><b>${o.id}</b></td><td>${o.date}</td><td>${o.windowNum}</td><td>${o.customer}</td><td>${o.phone}</td><td><b>${o.cashierName}</b></td><td>-</td></tr>`).join("");
+}
+
+// دالة فلترة التقارير والإكسيل المحدثة لتشمل كافة الأوردرات السحابية
+let filteredOrdersForReport = [];
+function filterReports() {
+  filteredOrdersForReport = orders; // تشمل كل الأوردرات المجلوبة من السحاب للمدير أو الكاشير
+  updateStatsUI();
+}
+
+function updateStatsUI() {
+  let tQ = 0;
+  filteredOrdersForReport.forEach(o => o.items.forEach(i => { tQ += (i.qty || 0); }));
+  document.getElementById("sOrders").textContent = filteredOrdersForReport.length;
+  document.getElementById("sQty").textContent = tQ;
+}
+
+function updateStats() {
+  let today = new Date().toISOString().split("T")[0];
+  if(!document.getElementById("dateFrom").value) {
+     document.getElementById("dateFrom").value = today;
+     document.getElementById("dateTo").value = today;
+  }
+  filterReports();
+}
+
+function exportToExcel() {
+  if(filteredOrdersForReport.length === 0) { alert("لا توجد بيانات للتصدير."); return; }
+  let csvContent = "\uFEFFرقم الأوردر,التاريخ,الشباك,العميل,الموبايل,المنطقة,العنوان,الكمية الكلية,الكاشير\n";
+  filteredOrdersForReport.forEach(o => {
+    let tQ = o.items.reduce((a, x) => a + (x.qty || 0), 0);
+    csvContent += `"${o.id}","${o.date}","${o.windowNum}","${o.customer}","${o.phone}","${o.area}","${o.address}",${tQ},"${o.cashierName}"\n`;
+  });
+  let link = document.createElement("a");
+  link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }));
+  link.download = "Flamingo_Orders_Reports_" + new Date().toISOString().split('T')[0] + ".csv";
+  link.click();
 }
 </script>
 </body>
