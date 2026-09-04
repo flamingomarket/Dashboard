@@ -458,7 +458,7 @@ async function saveOrderToCloud(orderData) {
     }
 }
 
-// دالة جلب الأوردرات من Supabase سحابياً
+// دالة جلب الأوردرات من Supabase سحابياً مع ميزة التحديث التلقائي اللحظي
 async function fetchOrdersFromCloud() {
     try {
         const { data, error } = await _supabase.from('orders').select('*').order('created_at', { ascending: false });
@@ -466,6 +466,7 @@ async function fetchOrdersFromCloud() {
 
         let allCloudOrders = data || [];
         
+        // لو اللي فاتح مش مدير، يفلتر أوردراته بس. لو مدير، يشوف الكل لحظياً!
         if (currentUser && currentUser.role !== 'manager') {
             allCloudOrders = allCloudOrders.filter(o => o.cashier_name === currentUser.name);
         }
@@ -490,6 +491,13 @@ async function fetchOrdersFromCloud() {
         console.error('خطأ في الاتصال:', err);
     }
 }
+
+// تحديث تلقائي كل 5 ثواني عشان لو "محمد" شغال في الفرع، الأوردر ينط قدام الأدمن فوراً من غير ما يعمل رفرش
+setInterval(() => {
+    if (currentUser) {
+        fetchOrdersFromCloud();
+    }
+}, 5000);
 
 function switchTab(tabId) {
   document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
